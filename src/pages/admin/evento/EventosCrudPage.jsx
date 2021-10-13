@@ -50,8 +50,8 @@ const EventosCrudPage = () => {
     { title: "Aforo", dataIndex: "aforo", key: "aforo" },
     {
       title: "Estado",
-      dataIndex: "nombreEstado",
-      key: "estado",
+      dataIndex: "nombreEstadoEvento",
+      key: "nombreEstadoEvento",
       render: (item) => <Tag color="geekblue">{item.toUpperCase()}</Tag>,
     },
     {

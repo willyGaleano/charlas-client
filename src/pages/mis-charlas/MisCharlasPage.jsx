@@ -1,37 +1,91 @@
-import { Table, Tag, Row, Col } from "antd";
+import { Table, Tag, Row, Col, Image, Popconfirm, message } from "antd";
 import Search from "antd/lib/input/Search";
+import { useEffect, useState } from "react";
+import { CancelIcon, CancelPopop } from "../../components/svg/IconSvg";
+import { MisEventosAPI } from "../../services/api";
+
+const initialRequest = {
+  nombre: "",
+  userId: "07f49499-514c-4aed-ba25-6df8abd5ff0c",
+  pageNumber: 1,
+  pageSize: 3,
+};
 
 const MisCharlasPage = () => {
-  const expandedRowRender = () =>
-    `Descripción Descripción Descripción Descripción Descripción 
-    Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción`;
+  const [request, setRequest] = useState(initialRequest);
+  const [loadingTable, setLoadingTable] = useState(false);
+  const [respPaginated, setRespPaginated] = useState({
+    pageNumber: 1,
+    pageSize: 3,
+    total: 1,
+    succeeded: false,
+    message: "",
+    errors: null,
+    data: [],
+  });
 
   const columns = [
-    { title: "Charla", dataIndex: "name", key: "name" },
-    { title: "Fecha", dataIndex: "platform", key: "platform" },
-    { title: "Duración", dataIndex: "version", key: "version" },
+    {
+      title: "Portada",
+      dataIndex: "urlImage",
+      key: "urlImage",
+      render: (item) => <Image src={item} width={70} preview={false} />,
+    },
+    { title: "Charla", dataIndex: "nombreCharla", key: "nombreCharla" },
+    { title: "Fecha inicio", dataIndex: "fechaIni", key: "fechaIni" },
+    { title: "Duración(h)", dataIndex: "duracion", key: "duracion" },
     {
       title: "Estado",
-      key: "upgradeNumss",
-      render: () => <Tag color="red">red</Tag>,
+      dataIndex: "nombreEstadoAsistencia",
+      key: "nombreEstadoAsistencia",
+      render: (item) => <Tag color="red">{item.toUpperCase()}</Tag>,
     },
     {
-      title: "Asistencia",
-      key: "upgradeNum",
-      render: () => <Tag color="red">red</Tag>,
+      title: "Cancelar",
+      key: "cancelar",
+      render: (item) => (
+        <Popconfirm
+          placement="top"
+          title="¿Cancelar evento?"
+          icon={<CancelPopop />}
+          onConfirm={() => handleCancelCharla(item.asistenciaId)}
+          okText="Sí"
+          cancelText="No"
+        >
+          <CancelIcon />
+        </Popconfirm>
+      ),
     },
   ];
-
-  const data = [];
-  for (let i = 0; i < 20; ++i) {
-    data.push({
-      key: i,
-      name: "Screem",
-      platform: "iOS",
-      version: "10.3.4.5654",
-      upgradeNum: 500,
-    });
-  }
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoadingTable(true);
+        const resp = await MisEventosAPI.listMisEventos(request);
+        console.log(resp);
+        if (resp.succeeded) setRespPaginated(resp);
+        else message.error(resp.message);
+        setLoadingTable(false);
+      } catch (error) {
+        setLoadingTable(false);
+        message.error(error.message);
+      }
+    })();
+  }, [request]);
+  const handleCancelCharla = async (asistenciaId) => {
+    try {
+      setLoadingTable(true);
+      const resp = await MisEventosAPI.cancelarEvento(asistenciaId);
+      if (resp.succeeded) {
+        setRequest((prevState) => ({ ...prevState }));
+        message.success(resp.message);
+      } else message.error(resp.message);
+      setLoadingTable(false);
+    } catch (error) {
+      setLoadingTable(false);
+      message.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -46,10 +100,9 @@ const MisCharlasPage = () => {
       <Row align="middle" justify="center">
         <Col xxl={16} xl={20} lg={20} md={18} sm={22} xs={20}>
           <Table
-            className="components-table-demo-nested"
+            loading={loadingTable}
             columns={columns}
-            expandable={{ expandedRowRender }}
-            dataSource={data}
+            dataSource={respPaginated.data}
             scroll={{ x: 650 }}
           />
         </Col>

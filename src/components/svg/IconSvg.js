@@ -1,5 +1,5 @@
 import Icon from "@ant-design/icons";
-import { heartSvg, editSvg, deleteSvg, createSvg } from "./svgs";
+import { heartSvg, editSvg, deleteSvg, createSvg, cancelSvg } from "./svgs";
 
 export const HeartIcon = (props) => (
   <Icon component={() => heartSvg("2em", "2em")} {...props} />
@@ -27,4 +27,12 @@ export const EditPopop = (props) => (
 
 export const DeletePopop = (props) => (
   <Icon component={() => deleteSvg("1.2em", "1.2em")} {...props} />
+);
+
+export const CancelIcon = (props) => (
+  <Icon component={() => cancelSvg("1.8em", "1.8em")} {...props} />
+);
+
+export const CancelPopop = (props) => (
+  <Icon component={() => cancelSvg("1.2em", "1.2em")} {...props} />
 );

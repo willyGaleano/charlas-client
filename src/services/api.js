@@ -11,6 +11,18 @@ const request = {
   put: (url, body) => axios.put(url, body).then(responseBody),
   delete: (url) => axios.delete(url).then(responseBody),
   patch: (url) => axios.patch(url).then(responseBody),
+  postMedia: (url, formData) =>
+    axios
+      .post(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(responseBody),
+  putMedia: (url, formData) =>
+    axios
+      .put(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(responseBody),
 };
 
 const HomeAPI = {
@@ -18,15 +30,27 @@ const HomeAPI = {
     request.post("/Asistencia/CrearAsistenciaAsync", body),
 };
 
+const MisEventosAPI = {
+  listMisEventos: async (req) =>
+    request.get(
+      `/Asistencia/GetAllAsync?Nombre=${req.nombre}&AppUserId=${req.userId}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
+    ),
+  cancelarEvento: async (asistenciaId) =>
+    request.delete(`/Asistencia/RechazarEventoAsync/${asistenciaId}`),
+};
+
 const AdminAPI = {
   listCharlaEvento: async (req) =>
     request.get(
-      `/CharlaEvento/GetAllPaginationAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
+      `/Evento/GetAllPaginationAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
     ),
   listCharla: async (req) =>
     request.get(
       `/Charla/GetAllPaginationCharlaAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
     ),
+  sendCharlaMedia: (req) => request.postMedia("/Charla/CreateCharlaAsync", req),
+  editCharlaMedia: (req) =>
+    request.putMedia(`/Charla/UpdateCharlaAsync/${req.id}`, req.form),
 };
 
-export { HomeAPI, AdminAPI };
+export { HomeAPI, AdminAPI, MisEventosAPI };

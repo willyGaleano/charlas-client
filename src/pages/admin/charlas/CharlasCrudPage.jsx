@@ -7,6 +7,8 @@ import {
   Space,
   Popconfirm,
   message,
+  notification,
+  Grid,
 } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import Search from "antd/lib/input/Search";
@@ -18,12 +20,15 @@ import {
   EditIcon,
 } from "../../../components/svg/IconSvg";
 import { AdminAPI } from "../../../services/api";
+
+import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+
 import NewOrEditCharlaForm from "./NewOrEditCharlaForm";
 
 const initialRequest = {
   nombre: "",
   pageNumber: 1,
-  pageSize: 3,
+  pageSize: 10,
 };
 
 const CharlasCrudPage = () => {
@@ -32,13 +37,8 @@ const CharlasCrudPage = () => {
   const [fileList, setFileList] = useState([]);
   const [request, setRequest] = useState(initialRequest);
   const [imgUrl, setImgUrl] = useState("");
+  const [detailId, setDetailId] = useState("");
   const [loadingTable, setLoadingTable] = useState(false);
-  const [respDetail, setRespDetail] = useState({
-    nombre: "",
-    descripcion: "",
-    urlImage: "",
-  });
-
   const [respPaginated, setRespPaginated] = useState({
     pageNumber: 1,
     pageSize: 3,
@@ -52,45 +52,104 @@ const CharlasCrudPage = () => {
   const [form] = useForm();
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoadingTable(true);
-        const resp = await AdminAPI.listCharla(request);
-        if (resp.succeeded) setRespPaginated(resp);
-        else message.error(resp.message);
-        setLoadingTable(false);
-      } catch (error) {
-        setLoadingTable(false);
-        message.error(error.message);
-      }
-    })();
-  }, [request]);
+    const connection = new HubConnectionBuilder()
+      .withUrl("http://localhost:48948/notify")
+      .configureLogging(LogLevel.Information)
+      .build();
 
-  const handleOk = (value) => {
-    console.log(value);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setFileList([]);
-      setImgUrl("");
-      form.resetFields();
-      setVisible(false);
-    }, 3000);
+    connection
+      .start()
+      .then((response) => console.log("Se conecto al hub"))
+      .catch((error) => console.log(error.toString()));
+
+    connection.on("BroadcastMessage", async () => {
+      await getAllCharlas();
+    });
+    return () => {
+      console.log("Se desconectó");
+      connection.stop();
+    };
+  }, []);
+
+  const getAllCharlas = async () => {
+    try {
+      setLoadingTable(true);
+      const resp = await AdminAPI.listCharla(request);
+      console.log(resp);
+      if (resp.succeeded) setRespPaginated(resp);
+      else message.error(resp.message);
+      setLoadingTable(false);
+    } catch (error) {
+      setLoadingTable(false);
+      message.error(error.message);
+    }
   };
+
+  useEffect(() => {
+    //(async () => {})();
+    getAllCharlas();
+  }, []);
+
+  const handleOk = async (value) => {
+    let formData = new FormData();
+    try {
+      setLoading(true);
+      formData.append("NombreCharla", value.nombre);
+      formData.append("DescripcionCharla", value.descripcion);
+      value.image === undefined
+        ? formData.append("File", null)
+        : formData.append("File", value.image[0]);
+
+      let resp;
+      if (detailId === "") resp = await AdminAPI.sendCharlaMedia(formData);
+      else {
+        const newFormData = {
+          id: detailId,
+          form: formData,
+        };
+        resp = await AdminAPI.editCharlaMedia(newFormData);
+      }
+
+      if (resp.succeeded) {
+        handleCancel();
+        setLoading(false);
+        message.success(resp.message);
+        //setRequest((prevState) => ({ ...prevState }));
+      } else {
+        setLoading(false);
+        notification.error({
+          message: "Error! :c",
+          description: resp.message,
+        });
+      }
+    } catch (error) {
+      handleCancel();
+      setLoading(false);
+      notification.error({
+        message: "Error! :c",
+        description: error.message,
+      });
+    }
+  };
+
+  const handleDelete = async (item) => {};
 
   const handleCancel = () => {
     form.resetFields();
+    setFileList([]);
     setImgUrl("");
+    setDetailId("");
     setVisible(false);
   };
 
   const openModalCreate = () => {
-    setRespDetail(null);
+    form.resetFields();
     setImgUrl("");
     setVisible(true);
   };
 
   const openModalEdit = (item) => {
+    setDetailId(item.charlaId);
     form.setFields([
       {
         name: "nombre",
@@ -104,6 +163,13 @@ const CharlasCrudPage = () => {
 
     setImgUrl(item.urlImage);
     setVisible(true);
+  };
+
+  const onPaginatedChange = (page) => {
+    setRequest((prevState) => ({
+      ...prevState,
+      pageNumber: page,
+    }));
   };
 
   const columns = [
@@ -125,10 +191,10 @@ const CharlasCrudPage = () => {
             onClick={() => openModalEdit(item)}
           />
           <Popconfirm
-            placement="right"
+            placement="top"
             title="¿Eliminar evento?"
             icon={<DeletePopop />}
-            onConfirm={() => console.log(item)}
+            onConfirm={() => handleDelete(item)}
             okText="Sí"
             cancelText="No"
           >
@@ -169,13 +235,23 @@ const CharlasCrudPage = () => {
             columns={columns}
             dataSource={respPaginated.data}
             scroll={{ x: 650 }}
+            pagination={{
+              total: respPaginated?.total,
+              pageSize: respPaginated.pageSize,
+              current: respPaginated.pageNumber,
+              onChange: onPaginatedChange,
+            }}
           />
         </Col>
       </Row>
 
       <Modal
         visible={visible}
-        title={imgUrl === "" ? "Crear charla" : "Editar charla"}
+        title={
+          imgUrl === "" && fileList.length === 0
+            ? "Crear charla"
+            : "Editar charla"
+        }
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}

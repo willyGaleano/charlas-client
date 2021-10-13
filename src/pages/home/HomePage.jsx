@@ -56,17 +56,17 @@ const HomePage = () => {
     })();
   }, [dispatch, request]);
 
-  const generateQrCode = async (charlaEventoId) => {
+  const generateQrCode = async (eventoId) => {
     try {
       const respAsist = await HomeAPI.crearAsistencia({
-        userAppId: "80760732-a0be-4a7b-ac6f-468050c25e4d",
-        charlaEventoId,
+        userAppId: "07f49499-514c-4aed-ba25-6df8abd5ff0c",
+        eventoId,
         fecSesion: moment().format("YYYY-MM-DD"),
       });
 
       if (respAsist.succeeded) {
         const response = await QRCode.toDataURL(
-          `80760732-a0be-4a7b-ac6f-468050c25e4d#${respAsist.data}`
+          `07f49499-514c-4aed-ba25-6df8abd5ff0c#${respAsist.data}`
         );
 
         Modal.info({
@@ -111,21 +111,28 @@ const HomePage = () => {
             }}
             dataSource={respPaginated.data}
             renderItem={(item) => (
-              <Badge.Ribbon text={item.nombreEstado} color="geekblue">
+              <Badge.Ribbon
+                text={<Text strong>{item.nombreEstadoEvento}</Text>}
+                color={item.colorEstadoEvento}
+              >
                 <List.Item
-                  key={item.charlaEventoId}
-                  actions={[
-                    <Popconfirm
-                      placement="topLeft"
-                      title="¿Anotarse a la charla?"
-                      icon={<HeartPopop />}
-                      onConfirm={() => generateQrCode(item.charlaEventoId)}
-                      okText="Sí"
-                      cancelText="No"
-                    >
-                      <HeartIcon style={{ cursor: "pointer" }} />
-                    </Popconfirm>,
-                  ]}
+                  key={item.eventoId}
+                  actions={
+                    item.nombreEstadoEvento !== "Finalizado"
+                      ? [
+                          <Popconfirm
+                            placement="topLeft"
+                            title="¿Anotarse a la charla?"
+                            icon={<HeartPopop />}
+                            onConfirm={() => generateQrCode(item.eventoId)}
+                            okText="Sí"
+                            cancelText="No"
+                          >
+                            <HeartIcon style={{ cursor: "pointer" }} />
+                          </Popconfirm>,
+                        ]
+                      : null
+                  }
                   extra={
                     <Image
                       width={272}
