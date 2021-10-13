@@ -51,6 +51,8 @@ const AdminAPI = {
   sendCharlaMedia: (req) => request.postMedia("/Charla/CreateCharlaAsync", req),
   editCharlaMedia: (req) =>
     request.putMedia(`/Charla/UpdateCharlaAsync/${req.id}`, req.form),
+  deshabilitarCharla: (id) =>
+    request.patch(`/Charla/DeshabilitarCharlaAsync/${id}`),
 };
 
 export { HomeAPI, AdminAPI, MisEventosAPI };

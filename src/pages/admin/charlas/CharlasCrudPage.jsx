@@ -132,7 +132,19 @@ const CharlasCrudPage = () => {
     }
   };
 
-  const handleDelete = async (item) => {};
+  const handleDelete = async (item) => {
+    try {
+      setLoadingTable(true);
+      const resp = await AdminAPI.deshabilitarCharla(item.charlaId);
+      console.log(resp);
+      if (resp.succeeded) message.success(resp.message);
+      else message.error(resp.message);
+      setLoadingTable(false);
+    } catch (error) {
+      setLoadingTable(false);
+      message.error(error.message);
+    }
+  };
 
   const handleCancel = () => {
     form.resetFields();
