@@ -1,7 +1,20 @@
-import { Table, Tag, Row, Col, Image, Popconfirm, message } from "antd";
+import {
+  Table,
+  Tag,
+  Row,
+  Col,
+  Image,
+  Popconfirm,
+  message,
+  Tooltip,
+} from "antd";
 import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
-import { CancelIcon, CancelPopop } from "../../components/svg/IconSvg";
+import {
+  CancelIcon,
+  CancelPopop,
+  DisabledIcon,
+} from "../../components/svg/IconSvg";
 import { MisEventosAPI } from "../../services/api";
 
 const initialRequest = {
@@ -43,18 +56,23 @@ const MisCharlasPage = () => {
     {
       title: "Cancelar",
       key: "cancelar",
-      render: (item) => (
-        <Popconfirm
-          placement="top"
-          title="¿Cancelar evento?"
-          icon={<CancelPopop />}
-          onConfirm={() => handleCancelCharla(item.asistenciaId)}
-          okText="Sí"
-          cancelText="No"
-        >
-          <CancelIcon />
-        </Popconfirm>
-      ),
+      render: (item) =>
+        item.nombreEstadoEvento.toUpperCase() === "FINALIZADO" ? (
+          <Tooltip title={"Charla " + item.nombreEstadoEvento}>
+            <DisabledIcon />
+          </Tooltip>
+        ) : (
+          <Popconfirm
+            placement="top"
+            title="¿Cancelar evento?"
+            icon={<CancelPopop />}
+            onConfirm={() => handleCancelCharla(item.asistenciaId)}
+            okText="Sí"
+            cancelText="No"
+          >
+            <CancelIcon />
+          </Popconfirm>
+        ),
     },
   ];
   useEffect(() => {

@@ -9,6 +9,7 @@ import {
   Popconfirm,
   message,
   Modal,
+  notification,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { HeartIcon, HeartPopop } from "../../components/svg/IconSvg.js";
@@ -25,6 +26,7 @@ const initialRequest = {
   nombre: "",
   pageNumber: 1,
   pageSize: 3,
+  isAdmin: false,
 };
 
 const HomePage = () => {
@@ -79,10 +81,17 @@ const HomePage = () => {
           onOk() {},
         });
       } else {
-        message.info(respAsist.message);
+        notification.info({
+          message: "Ups!",
+          placement: "bottomLeft",
+          description: respAsist.message,
+        });
       }
     } catch (error) {
-      message.error(error.message);
+      notification.error({
+        message: "Error :c",
+        description: error.message,
+      });
     }
   };
 
@@ -150,6 +159,8 @@ const HomePage = () => {
                         {moment(item.fechaIni).format("LLLL")}
                         <br />
                         Duración : {item.duracion}h
+                        <br />
+                        Aforo : {item.aforo}
                       </Text>
                     }
                   />

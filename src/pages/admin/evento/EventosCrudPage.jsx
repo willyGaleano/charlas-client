@@ -1,10 +1,20 @@
-import { Table, Tag, Row, Col, message, Popconfirm, Space } from "antd";
+import {
+  Table,
+  Tag,
+  Row,
+  Col,
+  message,
+  Popconfirm,
+  Space,
+  Tooltip,
+} from "antd";
 import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
 import {
   CreateIcon,
   DeleteIcon,
   DeletePopop,
+  DisabledIcon,
   EditIcon,
 } from "../../../components/svg/IconSvg";
 import { AdminAPI } from "../../../services/api";
@@ -13,6 +23,7 @@ const initialRequest = {
   nombre: "",
   pageNumber: 1,
   pageSize: 3,
+  isAdmin: true,
 };
 
 const EventosCrudPage = () => {
@@ -57,24 +68,29 @@ const EventosCrudPage = () => {
     {
       title: "Acciones",
       key: "acciones",
-      render: (item) => (
-        <Space>
-          <EditIcon
-            style={{ cursor: "pointer" }}
-            onClick={() => console.log(item)}
-          />
-          <Popconfirm
-            placement="right"
-            title="¿Eliminar evento?"
-            icon={<DeletePopop />}
-            onConfirm={() => console.log(item)}
-            okText="Sí"
-            cancelText="No"
-          >
-            <DeleteIcon />
-          </Popconfirm>
-        </Space>
-      ),
+      render: (item) =>
+        item.nombreEstadoEvento.toUpperCase() === "FINALIZADO" ? (
+          <Tooltip title={"Charla " + item.nombreEstadoEvento}>
+            <DisabledIcon />
+          </Tooltip>
+        ) : (
+          <Space>
+            <EditIcon
+              style={{ cursor: "pointer" }}
+              onClick={() => console.log(item)}
+            />
+            <Popconfirm
+              placement="right"
+              title="¿Eliminar evento?"
+              icon={<DeletePopop />}
+              onConfirm={() => console.log(item)}
+              okText="Sí"
+              cancelText="No"
+            >
+              <DeleteIcon />
+            </Popconfirm>
+          </Space>
+        ),
     },
   ];
 

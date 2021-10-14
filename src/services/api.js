@@ -42,7 +42,7 @@ const MisEventosAPI = {
 const AdminAPI = {
   listCharlaEvento: async (req) =>
     request.get(
-      `/Evento/GetAllPaginationAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
+      `/Evento/GetAllPaginationAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}&IsAdmin=${req.isAdmin}`
     ),
   listCharla: async (req) =>
     request.get(
