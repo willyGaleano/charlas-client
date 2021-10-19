@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { Route, Redirect } from "react-router-dom";
 import { token } from "../utils/auth/auth.service";
 
-const PrivateRouter = ({ componente: Component, ...rest }) => {
+const PrivateRouter = ({ component: Component, ...rest }) => {
+  console.log(token.get() ? "hola" : "no hola");
   const config = {
     type: "spring",
     damping: 20,
@@ -11,7 +12,7 @@ const PrivateRouter = ({ componente: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) =>
+      component={(props) =>
         token.get() ? (
           <motion.div
             transition={config}

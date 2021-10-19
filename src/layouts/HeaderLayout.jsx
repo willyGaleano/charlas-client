@@ -1,9 +1,16 @@
 import { Menu, Layout } from "antd";
-import React from "react";
+import { useDispatch } from "react-redux";
+
 import { Link } from "react-router-dom";
+import { logoutAction } from "../redux/actions/authAction";
 const { Header } = Layout;
 
 const HeaderLayout = () => {
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    dispatch(logoutAction());
+  };
+
   return (
     <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
       <div className="logo" />
@@ -13,6 +20,9 @@ const HeaderLayout = () => {
         </Menu.Item>
         <Menu.Item key="2">
           <Link to="/admin">Admin</Link>
+        </Menu.Item>
+        <Menu.Item key="3" onClick={logoutHandler}>
+          Salir
         </Menu.Item>
       </Menu>
     </Header>

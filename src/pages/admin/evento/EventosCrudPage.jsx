@@ -7,8 +7,12 @@ import {
   Popconfirm,
   Space,
   Tooltip,
+  Modal,
+  notification,
 } from "antd";
+import { useForm } from "antd/lib/form/Form";
 import Search from "antd/lib/input/Search";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import {
   CreateIcon,
@@ -18,6 +22,7 @@ import {
   EditIcon,
 } from "../../../components/svg/IconSvg";
 import { AdminAPI } from "../../../services/api";
+import NewOrEditEventoForm from "./NewOrEditEventoForm";
 
 const initialRequest = {
   nombre: "",
@@ -27,8 +32,13 @@ const initialRequest = {
 };
 
 const EventosCrudPage = () => {
+  const [form] = useForm();
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
   const [request, setRequest] = useState(initialRequest);
+  const [detailId, setDetailId] = useState("");
   const [loadingTable, setLoadingTable] = useState(false);
+  const [respCharlasForm, setRespCharlasForm] = useState([]);
   const [respPaginated, setRespPaginated] = useState({
     pageNumber: 1,
     pageSize: 3,
@@ -38,6 +48,18 @@ const EventosCrudPage = () => {
     errors: null,
     data: [],
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await AdminAPI.listCharlaForm();
+        if (resp.succeeded) setRespCharlasForm(resp.data);
+        else message.error(resp.message);
+      } catch (error) {
+        message.error(error.message);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -53,6 +75,93 @@ const EventosCrudPage = () => {
       }
     })();
   }, [request]);
+
+  const handleDelete = async (item) => {
+    try {
+      setLoadingTable(true);
+      const resp = await AdminAPI.deleteLogEvento(item.eventoId);
+      if (resp.succeeded) {
+        message.success(resp.message);
+        setRequest((prevState) => ({ ...prevState }));
+      } else message.error(resp.message);
+      setLoadingTable(false);
+    } catch (error) {
+      setLoadingTable(false);
+      message.error(error.message);
+    }
+  };
+
+  const openModalEdit = (item) => {
+    setDetailId(item.eventoId);
+    form.setFields([
+      {
+        name: "fechaIni",
+        value: moment(item.fechaIni),
+      },
+      {
+        name: "duracion",
+        value: item.duracion,
+      },
+      {
+        name: "aforo",
+        value: item.aforo,
+      },
+      {
+        name: "charlaId",
+        value: item.charlaId,
+      },
+    ]);
+
+    setVisibleModal(true);
+  };
+
+  const onPaginatedChange = (page) => {
+    setRequest((prevState) => ({
+      ...prevState,
+      pageNumber: page,
+    }));
+  };
+
+  const handleOnSubmit = async (value) => {
+    console.log("Form: ", value);
+    try {
+      setLoadingButton(true);
+      let resp;
+      if (detailId === "") resp = await AdminAPI.createEvento(value);
+      else resp = await AdminAPI.editarEvento(detailId, value);
+
+      if (resp.succeeded) {
+        handleCancel();
+        setLoadingButton(false);
+        message.success(resp.message);
+        setRequest((prevState) => ({ ...prevState }));
+      } else {
+        setLoadingButton(false);
+        notification.error({
+          message: "Error! :c",
+          description: resp.message,
+        });
+      }
+    } catch (error) {
+      handleCancel();
+      setLoadingButton(false);
+      notification.error({
+        message: "Error! :c",
+        description: error.message,
+      });
+    }
+  };
+  const handleCancel = () => {
+    form.resetFields();
+    setDetailId("");
+    setVisibleModal(false);
+  };
+
+  const openModalCreate = () => {
+    form.resetFields();
+    setDetailId("");
+    setVisibleModal(true);
+  };
 
   const columns = [
     { title: "Charla", dataIndex: "nombreCharla", key: "nombreCharla" },
@@ -77,13 +186,13 @@ const EventosCrudPage = () => {
           <Space>
             <EditIcon
               style={{ cursor: "pointer" }}
-              onClick={() => console.log(item)}
+              onClick={() => openModalEdit(item)}
             />
             <Popconfirm
               placement="right"
               title="¿Eliminar evento?"
               icon={<DeletePopop />}
-              onConfirm={() => console.log(item)}
+              onConfirm={() => handleDelete(item)}
               okText="Sí"
               cancelText="No"
             >
@@ -113,17 +222,41 @@ const EventosCrudPage = () => {
               alignItems: "flex-end",
             }}
           >
-            <CreateIcon style={{ cursor: "pointer", paddingBottom: 5 }} />
+            <CreateIcon
+              onClick={openModalCreate}
+              style={{ cursor: "pointer", paddingBottom: 5 }}
+            />
           </div>
           <Table
-            rowKey="charlaEventoId"
             loading={loadingTable}
+            rowKey="charlaId"
             columns={columns}
-            dataSource={respPaginated?.data}
+            dataSource={respPaginated.data}
             scroll={{ x: 650 }}
+            pagination={{
+              total: respPaginated?.total,
+              pageSize: respPaginated.pageSize,
+              current: respPaginated.pageNumber,
+              onChange: onPaginatedChange,
+            }}
           />
         </Col>
       </Row>
+
+      <Modal
+        visible={visibleModal}
+        title={detailId === "" ? "Crear evento" : "Editar evento"}
+        onOk={handleOnSubmit}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <NewOrEditEventoForm
+          handleOnSubmit={handleOnSubmit}
+          loadingButton={loadingButton}
+          respCharlasForm={respCharlasForm}
+          form={form}
+        />
+      </Modal>
     </>
   );
 };

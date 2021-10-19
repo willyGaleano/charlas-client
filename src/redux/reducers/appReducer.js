@@ -1,6 +1,6 @@
 import { types } from "../types/types";
 const initialState = {
-  loading: false,
+  loadingApp: false,
 };
 
 export const appReducer = (state = initialState, action) => {
@@ -8,7 +8,7 @@ export const appReducer = (state = initialState, action) => {
     case types.appLoading:
       return {
         ...state,
-        loading: action.payload,
+        loadingApp: action.payload,
       };
 
     default:

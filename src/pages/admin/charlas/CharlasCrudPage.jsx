@@ -203,7 +203,7 @@ const CharlasCrudPage = () => {
           />
           <Popconfirm
             placement="top"
-            title="¿Eliminar evento?"
+            title="¿Eliminar charla?"
             icon={<DeletePopop />}
             onConfirm={() => handleDelete(item)}
             okText="Sí"

@@ -6,7 +6,7 @@ const PublicRouter = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) =>
+      component={(props) =>
         token.get() ? (
           <Redirect to="/" />
         ) : (

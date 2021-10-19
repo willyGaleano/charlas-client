@@ -118,6 +118,7 @@ const MisCharlasPage = () => {
       <Row align="middle" justify="center">
         <Col xxl={16} xl={20} lg={20} md={18} sm={22} xs={20}>
           <Table
+            rowKey="asistenciaId"
             loading={loadingTable}
             columns={columns}
             dataSource={respPaginated.data}
