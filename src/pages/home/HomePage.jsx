@@ -31,6 +31,7 @@ const initialRequest = {
 
 const HomePage = () => {
   const { loading } = useSelector((state) => state.app);
+  const { user } = useSelector((state) => state.auth);
   const [request, setRequest] = useState(initialRequest);
   const [respPaginated, setRespPaginated] = useState({
     pageNumber: 1,
@@ -61,15 +62,13 @@ const HomePage = () => {
   const generateQrCode = async (eventoId) => {
     try {
       const respAsist = await HomeAPI.crearAsistencia({
-        userAppId: "07f49499-514c-4aed-ba25-6df8abd5ff0c",
+        userAppId: user.id,
         eventoId,
         fecSesion: moment().format("YYYY-MM-DD"),
       });
 
       if (respAsist.succeeded) {
-        const response = await QRCode.toDataURL(
-          `07f49499-514c-4aed-ba25-6df8abd5ff0c#${respAsist.data}`
-        );
+        const response = await QRCode.toDataURL(`${user.id}#${respAsist.data}`);
 
         Modal.info({
           title: "Descargue su QR",
@@ -83,7 +82,7 @@ const HomePage = () => {
       } else {
         notification.info({
           message: "Ups!",
-          placement: "bottomLeft",
+          placement: "topLeft",
           description: respAsist.message,
         });
       }
@@ -93,6 +92,13 @@ const HomePage = () => {
         description: error.message,
       });
     }
+  };
+
+  const onPaginatedChange = (page) => {
+    setRequest((prevState) => ({
+      ...prevState,
+      pageNumber: page,
+    }));
   };
 
   return (
@@ -112,11 +118,10 @@ const HomePage = () => {
             loading={loading}
             size="large"
             pagination={{
-              onChange: (page) => {
-                console.log(page);
-              },
+              total: respPaginated?.total,
               pageSize: respPaginated.pageSize,
-              total: respPaginated.total,
+              current: respPaginated.pageNumber,
+              onChange: onPaginatedChange,
             }}
             dataSource={respPaginated.data}
             renderItem={(item) => (

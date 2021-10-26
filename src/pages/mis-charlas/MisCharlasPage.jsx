@@ -10,6 +10,7 @@ import {
 } from "antd";
 import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   CancelIcon,
   CancelPopop,
@@ -17,15 +18,14 @@ import {
 } from "../../components/svg/IconSvg";
 import { MisEventosAPI } from "../../services/api";
 
-const initialRequest = {
-  nombre: "",
-  userId: "07f49499-514c-4aed-ba25-6df8abd5ff0c",
-  pageNumber: 1,
-  pageSize: 3,
-};
-
 const MisCharlasPage = () => {
-  const [request, setRequest] = useState(initialRequest);
+  const { user } = useSelector((state) => state.auth);
+  const [request, setRequest] = useState({
+    nombre: "",
+    userId: user.id,
+    pageNumber: 1,
+    pageSize: 3,
+  });
   const [loadingTable, setLoadingTable] = useState(false);
   const [respPaginated, setRespPaginated] = useState({
     pageNumber: 1,

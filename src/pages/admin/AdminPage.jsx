@@ -1,38 +1,132 @@
-import { Row, Col, Tabs, Grid } from "antd";
-import CharlasCrudPage from "./charlas/CharlasCrudPage";
-import EstadosCrudPage from "./estados/EstadosCrudPage";
-import EventosCrudPage from "./evento/EventosCrudPage";
-import UsersCrudPage from "./users/UsersCrudPage";
-const { TabPane } = Tabs;
+import { Row, Col, Grid, PageHeader, Card, Avatar } from "antd";
+
+import { Link, useRouteMatch } from "react-router-dom";
+import Meta from "antd/lib/card/Meta";
+import {
+  CharlaIcon,
+  CharlaIconPortada,
+  EstadoIcon,
+  EstadoIconPortada,
+  EventoIcon,
+  EventoIconPortada,
+  UsuarioIcon,
+  UsuarioIconPortada,
+} from "../../components/svg/IconSvg";
+
 const { useBreakpoint } = Grid;
 
 const AdminPage = () => {
-  const screen = useBreakpoint();
+  const { url } = useRouteMatch();
+  const screens = useBreakpoint();
+
   return (
     <>
-      <Row align="middle" justify="center" style={{ marginBottom: "10px" }}>
-        <Col xxl={12} xl={18} lg={20} md={18} sm={22} xs={20}></Col>
-      </Row>
-      <Row align="middle" justify="center">
-        <Col xxl={24} xl={20} lg={20} md={24} sm={22} xs={20}>
-          <Tabs
-            defaultActiveKey="1"
-            centered
-            tabPosition={screen.xl ? "left" : "top"}
+      <PageHeader
+        onBack={() => null}
+        title={!screens.md ? "EAPP ADMIN" : "EVENTOS APP ADMIN"}
+        subTitle={!screens.md ? "" : "EAPP"}
+      />
+      <Row
+        justify="center"
+        style={{ background: "#fafafa", paddingBottom: 20 }}
+      >
+        <Col span={22}>
+          <Row
+            gutter={[16, 16]}
+            justify="center"
+            style={{ marginTop: "20px", marginBottom: "10px" }}
           >
-            <TabPane tab="Charlas" key="1">
-              <CharlasCrudPage />
-            </TabPane>
-            <TabPane tab="Eventos" key="2">
-              <EventosCrudPage />
-            </TabPane>
-            <TabPane tab="Estados" key="3">
-              <EstadosCrudPage />
-            </TabPane>
-            <TabPane tab="Users" key="4">
-              <UsersCrudPage />
-            </TabPane>
-          </Tabs>
+            <Col xxl={8} xl={8} lg={12} md={12} sm={20} xs={24}>
+              <Link to={`${url}/charlas`}>
+                <Card
+                  hoverable
+                  cover={<CharlaIconPortada style={{ marginTop: 10 }} />}
+                  style={{
+                    borderBottom: "2px solid",
+                    borderBottomColor: "#002766",
+                  }}
+                >
+                  <Meta
+                    avatar={<Avatar icon={<CharlaIcon />} />}
+                    title="Charlas"
+                    description="Listado de charlas"
+                  />
+                </Card>
+              </Link>
+            </Col>
+            <Col xxl={8} xl={8} lg={12} md={12} sm={20} xs={24}>
+              <Link to={`${url}/eventos`}>
+                <Card
+                  hoverable
+                  cover={<EventoIconPortada style={{ marginTop: 10 }} />}
+                  style={{
+                    borderBottom: "2px solid",
+                    borderBottomColor: "#002766",
+                  }}
+                >
+                  <Meta
+                    avatar={<Avatar icon={<EventoIcon />} />}
+                    title="Eventos"
+                    description="Listado de eventos"
+                  />
+                </Card>
+              </Link>
+            </Col>
+            <Col xxl={8} xl={8} lg={12} md={12} sm={20} xs={24}>
+              <Link to={`${url}/estado-asistencias`}>
+                <Card
+                  hoverable
+                  cover={<EstadoIconPortada style={{ marginTop: 10 }} />}
+                  style={{
+                    borderBottom: "2px solid",
+                    borderBottomColor: "#002766",
+                  }}
+                >
+                  <Meta
+                    avatar={<Avatar icon={<EstadoIcon />} />}
+                    title="Estado-Asistencias"
+                    description="Listado de estado de asistencias"
+                  />
+                </Card>
+              </Link>
+            </Col>
+            <Col xxl={8} xl={8} lg={12} md={12} sm={20} xs={24}>
+              <Link to={`${url}/estado-eventos`}>
+                <Card
+                  hoverable
+                  cover={<EstadoIconPortada style={{ marginTop: 10 }} />}
+                  style={{
+                    borderBottom: "2px solid",
+                    borderBottomColor: "#002766",
+                  }}
+                >
+                  <Meta
+                    avatar={<Avatar icon={<EstadoIcon />} />}
+                    title="Estado-Eventos"
+                    description="Listado de estado de eventos"
+                  />
+                </Card>
+              </Link>
+            </Col>
+            <Col xxl={8} xl={8} lg={12} md={12} sm={20} xs={24}>
+              <Link to={`${url}/usuarios`}>
+                <Card
+                  hoverable
+                  cover={<UsuarioIconPortada style={{ marginTop: 10 }} />}
+                  style={{
+                    borderBottom: "2px solid",
+                    borderBottomColor: "#002766",
+                  }}
+                >
+                  <Meta
+                    avatar={<Avatar icon={<UsuarioIcon />} />}
+                    title="Usuarios"
+                    description="Listado de usuarios"
+                  />
+                </Card>
+              </Link>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>

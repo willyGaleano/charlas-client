@@ -23,6 +23,7 @@ import { AdminAPI } from "../../../services/api";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 import NewOrEditCharlaForm from "./NewOrEditCharlaForm";
+import AdminPage from "../AdminPage";
 
 const initialRequest = {
   nombre: "",
@@ -87,7 +88,7 @@ const CharlasCrudPage = () => {
   useEffect(() => {
     //(async () => {})();
     getAllCharlas();
-  }, []);
+  }, [request]);
 
   const handleOk = async (value) => {
     let formData = new FormData();

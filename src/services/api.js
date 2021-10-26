@@ -1,10 +1,10 @@
 import { message } from "antd";
 import axios from "axios";
-import { logoutAction } from "../redux/actions/authAction";
 import { token } from "../utils/auth/auth.service";
 import * as consts from "../utils/consts";
 
 axios.defaults.baseURL = consts.BASE_URL_API_LOCAL;
+axios.defaults.headers = { "Content-Type": "application/json" };
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(
@@ -46,6 +46,7 @@ axios.interceptors.response.use(
         }
       }
     }
+    return Promise.reject(err);
   }
 );
 
@@ -74,7 +75,7 @@ const request = {
 const AppAPI = {};
 
 const AuthAPI = {
-  startLogin: async (req) => request.post("/Account/Authenticate", req),
+  startLogin: (req) => request.post("/Account/Authenticate", req),
   startRegister: (req) => request.post("/Account/Register", req),
   refreshToken: () => request.post("/Account/RefreshToken", {}),
 };
@@ -98,20 +99,49 @@ const AdminAPI = {
     request.get(
       `/Evento/GetAllPaginationAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}&IsAdmin=${req.isAdmin}`
     ),
-  listCharla: async (req) =>
+  listCharla: (req) =>
     request.get(
       `/Charla/GetAllPaginationCharlaAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
     ),
-  listCharlaForm: async () => request.get("/Charla/GetAllCharlaAsync"),
+  listCharlaForm: () => request.get("/Charla/GetAllCharlaAsync"),
   sendCharlaMedia: (req) => request.postMedia("/Charla/CreateCharlaAsync", req),
   editCharlaMedia: (req) =>
     request.putMedia(`/Charla/UpdateCharlaAsync/${req.id}`, req.form),
   deshabilitarCharla: (id) =>
     request.patch(`/Charla/DeshabilitarCharlaAsync/${id}`),
+
   createEvento: (req) => request.post("/Evento/CrearEventoAsync", req),
   editarEvento: (id, req) =>
     request.put(`/Evento/UpdateEventoAsync/${id}`, req),
   deleteLogEvento: (id) => request.patch(`/Evento/DeleteLogEventoAsync/${id}`),
+
+  listEstadoEventos: (req) =>
+    request.get(
+      `/EstadoEvento/GetAllAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
+    ),
+  createEstadoEventos: (req) =>
+    request.post("/EstadoEvento/CreateAsync", {
+      nombre: req.nombre,
+      color: req.color.hex,
+    }),
+  editEstadoEventos: (id, req) =>
+    request.put(`/EstadoEvento/UpdateAsync/${id}`, {
+      nombre: req.nombre,
+      color: req.color.hex,
+    }),
+  deleteLogEstadoEventos: (id) =>
+    request.patch(`/EstadoEvento/DisabledAsync/${id}`),
+
+  listEstadoAsistencias: (req) =>
+    request.get(
+      `/EstadoAsistencia/GetAllAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
+    ),
+  createEstadoAsistencias: (req) =>
+    request.post("/EstadoAsistencia/CreateAsync", req),
+  editEstadoAsistencias: (id, req) =>
+    request.put(`/EstadoAsistencia/UpdateAsync/${id}`, req),
+  deleteLogEstadoAsistencias: (id) =>
+    request.patch(`/EstadoAsistencia/DisabledAsync/${id}`),
 };
 
 export { HomeAPI, AdminAPI, MisEventosAPI, AppAPI, AuthAPI };

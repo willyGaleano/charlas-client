@@ -1,4 +1,5 @@
 import { message } from "antd";
+import axios from "axios";
 import { AuthAPI } from "../../services/api";
 import { token } from "../../utils/auth/auth.service";
 import history from "../../utils/history";
@@ -10,7 +11,8 @@ export const loginAction = (value) => {
     try {
       dispatch(loadingAppAction(true));
       const resp = await AuthAPI.startLogin(value);
-      if (resp.succeeded) {
+      console.log("resp: ", resp);
+      if (resp?.succeeded) {
         console.log(resp);
         token.set(resp.data.jwToken);
         dispatch(login(resp.data));
@@ -18,7 +20,8 @@ export const loginAction = (value) => {
       dispatch(loadingAppAction(false));
     } catch (ex) {
       dispatch(loadingAppAction(false));
-      message.error(ex.message);
+      message.error("Email o password incorrectos", 5);
+      console.log(ex.message);
     }
   };
 };

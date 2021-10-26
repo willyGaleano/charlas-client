@@ -8,6 +8,7 @@ import {
   EditIcon,
 } from "../../../components/svg/IconSvg";
 import { AdminAPI } from "../../../services/api";
+import AdminPage from "../AdminPage";
 
 const initialRequest = {
   nombre: "",

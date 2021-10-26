@@ -5,6 +5,7 @@ import LoginPage from "../pages/auth/login/LoginPage";
 import HomePage from "../pages/home/HomePage";
 import MisCharlasPage from "../pages/mis-charlas/MisCharlasPage";
 import NotFoundPage from "../pages/notfound/NotFoundPage";
+import AdminRouter from "./AdminRouter";
 import PrivateRouter from "./PrivateRouter";
 import PublicRouter from "./PublicRouter";
 
@@ -15,9 +16,12 @@ const AppRouter = () => {
       <Switch location={location} key={location.pathname}>
         <PrivateRouter path="/" component={HomePage} exact />
         <PrivateRouter path="/mis-charlas" component={MisCharlasPage} exact />
-        <PrivateRouter path="/admin" component={AdminPage} exact />
-        <PublicRouter path="/login" component={LoginPage} />
-        <Route path="*" component={NotFoundPage} />
+        <PrivateRouter path="/admin" component={AdminRouter} />
+        <PublicRouter path="/login" component={LoginPage} exact />
+        <Route path="/404" component={NotFoundPage} />
+        <Route path="*">
+          <Redirect to="/404" />
+        </Route>
       </Switch>
     </AnimatePresence>
   );

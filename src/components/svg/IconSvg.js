@@ -7,6 +7,10 @@ import {
   cancelSvg,
   cancelDisabledSvg,
   disabledSvg,
+  charlasSvg,
+  eventosSvg,
+  estadosSvg,
+  usuariosSvg,
 } from "./svgs";
 
 export const HeartIcon = (props) => (
@@ -47,4 +51,36 @@ export const CancelPopop = (props) => (
 
 export const DisabledIcon = (props) => (
   <Icon component={() => disabledSvg("2.1em", "2.1em")} {...props} />
+);
+
+export const CharlaIcon = (props) => (
+  <Icon component={() => charlasSvg("1em", "1em")} {...props} />
+);
+
+export const EventoIcon = (props) => (
+  <Icon component={() => eventosSvg("1em", "1em")} {...props} />
+);
+
+export const EstadoIcon = (props) => (
+  <Icon component={() => estadosSvg("1em", "1em")} {...props} />
+);
+
+export const UsuarioIcon = (props) => (
+  <Icon component={() => usuariosSvg("1em", "1em")} {...props} />
+);
+
+export const CharlaIconPortada = (props) => (
+  <Icon component={() => charlasSvg("200px", "200px")} {...props} />
+);
+
+export const EventoIconPortada = (props) => (
+  <Icon component={() => eventosSvg("200px", "200px")} {...props} />
+);
+
+export const EstadoIconPortada = (props) => (
+  <Icon component={() => estadosSvg("200px", "200px")} {...props} />
+);
+
+export const UsuarioIconPortada = (props) => (
+  <Icon component={() => usuariosSvg("200px", "200px")} {...props} />
 );
