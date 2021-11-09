@@ -5,6 +5,7 @@ const initialValues = {
     id: "",
     userName: "",
     email: "",
+    avatar: "",
     roles: [],
   },
   isLoggedIn: false,
@@ -21,6 +22,7 @@ export const authReducer = (state = initialValues, action) => {
           userName: action.payload.userName,
           email: action.payload.email,
           roles: [...action.payload.roles],
+          avatar: action.payload.avatar,
         },
       };
     case types.authLogout:

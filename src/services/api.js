@@ -99,22 +99,26 @@ const AdminAPI = {
     request.get(
       `/Evento/GetAllPaginationAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}&IsAdmin=${req.isAdmin}`
     ),
+
+  //CHARLA
   listCharla: (req) =>
     request.get(
       `/Charla/GetAllPaginationCharlaAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
     ),
-  listCharlaForm: () => request.get("/Charla/GetAllCharlaAsync"),
   sendCharlaMedia: (req) => request.postMedia("/Charla/CreateCharlaAsync", req),
   editCharlaMedia: (req) =>
     request.putMedia(`/Charla/UpdateCharlaAsync/${req.id}`, req.form),
   deshabilitarCharla: (id) =>
     request.patch(`/Charla/DeshabilitarCharlaAsync/${id}`),
 
+  //EVENTO
   createEvento: (req) => request.post("/Evento/CrearEventoAsync", req),
   editarEvento: (id, req) =>
     request.put(`/Evento/UpdateEventoAsync/${id}`, req),
   deleteLogEvento: (id) => request.patch(`/Evento/DeleteLogEventoAsync/${id}`),
+  listCharlaForm: () => request.get("/Charla/GetAllCharlaAsync"),
 
+  //ESTADO - EVENTO
   listEstadoEventos: (req) =>
     request.get(
       `/EstadoEvento/GetAllAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
@@ -132,6 +136,7 @@ const AdminAPI = {
   deleteLogEstadoEventos: (id) =>
     request.patch(`/EstadoEvento/DisabledAsync/${id}`),
 
+  //ESTADO - ASISTENCIA
   listEstadoAsistencias: (req) =>
     request.get(
       `/EstadoAsistencia/GetAllAsync?Nombre=${req.nombre}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
@@ -142,6 +147,15 @@ const AdminAPI = {
     request.put(`/EstadoAsistencia/UpdateAsync/${id}`, req),
   deleteLogEstadoAsistencias: (id) =>
     request.patch(`/EstadoAsistencia/DisabledAsync/${id}`),
+
+  //USER
+  listUsers: (req) =>
+    request.get(
+      `/User/GetAllAsync?FirstName=${req.firstName}&LastName=${req.lastName}&Dni=${req.dni}&PageNumber=${req.pageNumber}&PageSize=${req.pageSize}`
+    ),
+  createUser: (req) => request.postMedia("/User/CreateAsync", req),
+  editUser: (req) => request.putMedia(`/User/UpdateAsync/${req.id}`, req.form),
+  deshabilitarUser: (id) => request.patch(`/User/DisabledAsync/${id}`),
 };
 
 export { HomeAPI, AdminAPI, MisEventosAPI, AppAPI, AuthAPI };

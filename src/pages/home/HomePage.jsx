@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { loadingAppAction } from "../../redux/actions/appAction.js";
 import { AdminAPI, HomeAPI } from "../../services/api.js";
 import moment from "moment";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 const { Text, Link } = Typography;
 const { Search } = Input;
 
@@ -30,6 +31,7 @@ const initialRequest = {
 };
 
 const HomePage = () => {
+  const screen = useBreakpoint();
   const { loading } = useSelector((state) => state.app);
   const { user } = useSelector((state) => state.auth);
   const [request, setRequest] = useState(initialRequest);
@@ -59,7 +61,7 @@ const HomePage = () => {
     })();
   }, [dispatch, request]);
 
-  const generateQrCode = async (eventoId) => {
+  const generateQrCode = async (eventoId, nombreCharla) => {
     try {
       const respAsist = await HomeAPI.crearAsistencia({
         userAppId: user.id,
@@ -73,7 +75,7 @@ const HomePage = () => {
         Modal.info({
           title: "Descargue su QR",
           content: (
-            <Link href={response} download>
+            <Link href={response} download={nombreCharla}>
               <Image preview={false} src={response} alt="qr" />
             </Link>
           ),
@@ -101,18 +103,23 @@ const HomePage = () => {
     }));
   };
 
+  const onSearch = (value) => {
+    setRequest((prev) => ({ ...prev, nombre: value }));
+  };
+
   return (
     <>
       <Row align="middle" justify="center" style={{ marginBottom: "10px" }}>
-        <Col xxl={12} xl={18} lg={20} md={18} sm={22} xs={20}>
+        <Col xxl={12} xl={18} lg={18} md={18} sm={18} xs={24}>
           <Search
-            placeholder="buscar charla"
-            //onSearch={onSearch}
+            placeholder="charla..."
+            onSearch={onSearch}
+            enterButton="buscar"
           />
         </Col>
       </Row>
       <Row align="middle" justify="center">
-        <Col xxl={16} xl={20} lg={20} md={18} sm={22} xs={20}>
+        <Col xxl={20} xl={20} lg={20} md={20} sm={22} xs={24}>
           <List
             itemLayout="vertical"
             loading={loading}
@@ -138,7 +145,9 @@ const HomePage = () => {
                             placement="topLeft"
                             title="¿Anotarse a la charla?"
                             icon={<HeartPopop />}
-                            onConfirm={() => generateQrCode(item.eventoId)}
+                            onConfirm={() =>
+                              generateQrCode(item.eventoId, item.nombreCharla)
+                            }
                             okText="Sí"
                             cancelText="No"
                           >
@@ -149,7 +158,8 @@ const HomePage = () => {
                   }
                   extra={
                     <Image
-                      width={272}
+                      width={screen.md ? 272 : null}
+                      style={{ objectFit: "cover" }}
                       alt={item.nombreCharla}
                       src={item.urlImage}
                     />

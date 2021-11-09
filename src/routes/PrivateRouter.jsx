@@ -3,11 +3,14 @@ import { Route, Redirect } from "react-router-dom";
 import { token } from "../utils/auth/auth.service";
 
 const PrivateRouter = ({ component: Component, ...rest }) => {
-  console.log(token.get() ? "hola" : "no hola");
   const config = {
     type: "spring",
-    damping: 20,
-    stiffness: 100,
+    mass: 0.25,
+    stiffness: 300,
+    velocity: 10,
+    restSpeed: 0.2,
+    restDelta: 0.2,
+    damping: 6,
   };
   return (
     <Route

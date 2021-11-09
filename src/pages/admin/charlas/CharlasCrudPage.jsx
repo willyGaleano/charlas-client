@@ -23,12 +23,11 @@ import { AdminAPI } from "../../../services/api";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 import NewOrEditCharlaForm from "./NewOrEditCharlaForm";
-import AdminPage from "../AdminPage";
 
 const initialRequest = {
   nombre: "",
   pageNumber: 1,
-  pageSize: 10,
+  pageSize: 6,
 };
 
 const CharlasCrudPage = () => {
@@ -41,7 +40,7 @@ const CharlasCrudPage = () => {
   const [loadingTable, setLoadingTable] = useState(false);
   const [respPaginated, setRespPaginated] = useState({
     pageNumber: 1,
-    pageSize: 3,
+    pageSize: 6,
     total: 1,
     succeeded: false,
     message: "",
@@ -217,18 +216,23 @@ const CharlasCrudPage = () => {
     },
   ];
 
+  const onSearch = (value) => {
+    setRequest((prev) => ({ ...prev, nombre: value }));
+  };
+
   return (
     <>
       <Row align="middle" justify="center" style={{ marginBottom: "10px" }}>
-        <Col xxl={12} xl={18} lg={20} md={18} sm={22} xs={20}>
+        <Col xxl={12} xl={18} lg={18} md={18} sm={18} xs={24}>
           <Search
-            placeholder="buscar charla"
-            //onSearch={onSearch}
+            placeholder="charla..."
+            onSearch={onSearch}
+            enterButton="buscar"
           />
         </Col>
       </Row>
       <Row align="middle" justify="center">
-        <Col xxl={18} xl={20} lg={20} md={18} sm={22} xs={20}>
+        <Col xxl={16} xl={20} lg={20} md={22} sm={24} xs={24}>
           <div
             style={{
               display: "flex",
