@@ -7,6 +7,8 @@ import {
   Popconfirm,
   message,
   Tooltip,
+  Modal,
+  Typography,
 } from "antd";
 import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
@@ -15,8 +17,15 @@ import {
   CancelIcon,
   CancelPopop,
   DisabledIcon,
+  HeartIcon,
+  HeartPopop,
+  QRIcon,
+  QRPopop,
 } from "../../components/svg/IconSvg";
+import QRCode from "qrcode";
 import { MisEventosAPI } from "../../services/api";
+
+const { Link } = Typography;
 
 const MisCharlasPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -37,6 +46,20 @@ const MisCharlasPage = () => {
     data: [],
   });
 
+  const generateQrCode = async (asistenciaId, nombreCharla) => {
+    const response = await QRCode.toDataURL(`${user.id}#${asistenciaId}`);
+
+    Modal.info({
+      title: "Descargue su QR",
+      content: (
+        <Link href={response} download={nombreCharla}>
+          <Image preview={false} src={response} alt="qr" />
+        </Link>
+      ),
+      onOk() {},
+    });
+  };
+
   const columns = [
     {
       title: "Portada",
@@ -48,10 +71,31 @@ const MisCharlasPage = () => {
     { title: "Fecha inicio", dataIndex: "fechaIni", key: "fechaIni" },
     { title: "Duración(h)", dataIndex: "duracion", key: "duracion" },
     {
+      title: "QR",
+      key: "qr",
+      render: (item) =>
+        item.nombreEstadoEvento !== "Finalizado" ? (
+          <Popconfirm
+            placement="topLeft"
+            title="Generar código QR"
+            icon={<QRPopop />}
+            onConfirm={() =>
+              generateQrCode(item.asistenciaId, item.nombreCharla)
+            }
+            okText="Sí"
+            cancelText="No"
+          >
+            <QRIcon style={{ cursor: "pointer" }} />
+          </Popconfirm>
+        ) : (
+          <DisabledIcon />
+        ),
+    },
+    {
       title: "Estado",
       dataIndex: "nombreEstadoAsistencia",
       key: "nombreEstadoAsistencia",
-      render: (item) => <Tag color="red">{item.toUpperCase()}</Tag>,
+      render: (item) => <Tag color="geekblue">{item.toUpperCase()}</Tag>,
     },
     {
       title: "Cancelar",
@@ -90,6 +134,7 @@ const MisCharlasPage = () => {
       }
     })();
   }, [request]);
+
   const handleCancelCharla = async (asistenciaId) => {
     try {
       setLoadingTable(true);

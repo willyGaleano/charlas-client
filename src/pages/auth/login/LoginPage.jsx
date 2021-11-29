@@ -1,8 +1,9 @@
-import { Form, Input, Button, Row, Col } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Row, Col, Space, Modal } from "antd";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAction } from "../../../redux/actions/authAction";
+import { CuentaInfoIcon } from "../../../components/svg/IconSvg";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,19 @@ const LoginPage = () => {
     console.log("Received values of form: ", values);
     dispatch(loginAction(values));
   };
+
+  function info() {
+    Modal.info({
+      title: "Cuentas",
+      content: (
+        <div>
+          <p>admin: willy@gmail.com - Holamundo123*</p>
+          <p>public: willy@gmail.com - Holamundo123*</p>
+        </div>
+      ),
+      onOk() {},
+    });
+  }
 
   return (
     <Form name="formlogin" onFinish={onSubmit}>
@@ -32,8 +46,8 @@ const LoginPage = () => {
             hasFeedback
           >
             <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              prefix={<MailOutlined className="site-form-item-icon" />}
+              placeholder="Email"
             />
           </Form.Item>
         </Col>
@@ -58,6 +72,9 @@ const LoginPage = () => {
             </Button>
           </Form.Item>
           O <Link to="/register">registrate ahora!</Link>
+        </Col>
+        <Col xxl={14} xl={16} lg={18} md={18} sm={14} xs={18}>
+          <CuentaInfoIcon style={{ cursor: "pointer" }} onClick={info} />
         </Col>
       </Row>
     </Form>

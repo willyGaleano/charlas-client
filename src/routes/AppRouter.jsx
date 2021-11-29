@@ -1,7 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { Switch, Route, Redirect, useLocation } from "react-router-dom";
-import AdminPage from "../pages/admin/AdminPage";
 import LoginPage from "../pages/auth/login/LoginPage";
 import HomePage from "../pages/home/HomePage";
 import MisCharlasPage from "../pages/mis-charlas/MisCharlasPage";
@@ -19,7 +18,7 @@ const AppRouter = () => {
     <AnimatePresence exitBeforeEnter initial={false}>
       <Switch location={location} key={location.pathname}>
         <PrivateRouter path="/" component={HomePage} exact />
-        <PrivateRouter path="/mis-charlas" component={MisCharlasPage} exact />
+        <PrivateRouter path="/mis-eventos" component={MisCharlasPage} exact />
         <PrivateRouter
           path="/mis-estadisticas"
           component={MisEstadisticas}

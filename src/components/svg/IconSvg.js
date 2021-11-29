@@ -11,6 +11,9 @@ import {
   eventosSvg,
   estadosSvg,
   usuariosSvg,
+  uploadSvg,
+  qrSvg,
+  cuentaInfoSvg,
 } from "./svgs";
 
 export const HeartIcon = (props) => (
@@ -83,4 +86,20 @@ export const EstadoIconPortada = (props) => (
 
 export const UsuarioIconPortada = (props) => (
   <Icon component={() => usuariosSvg("200px", "200px")} {...props} />
+);
+
+export const UploadFileIcon = (props) => (
+  <Icon component={() => uploadSvg("2em", "2em")} {...props} />
+);
+
+export const QRIcon = (props) => (
+  <Icon component={() => qrSvg("2em", "2em")} {...props} />
+);
+
+export const QRPopop = (props) => (
+  <Icon component={() => qrSvg("1.2em", "1.2em")} {...props} />
+);
+
+export const CuentaInfoIcon = (props) => (
+  <Icon component={() => cuentaInfoSvg("2em", "2em")} {...props} />
 );

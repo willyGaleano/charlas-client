@@ -8,6 +8,7 @@ import {
   Popconfirm,
   message,
   notification,
+  PageHeader,
 } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import Search from "antd/lib/input/Search";
@@ -23,6 +24,7 @@ import { AdminAPI } from "../../../services/api";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 import NewOrEditCharlaForm from "./NewOrEditCharlaForm";
+import history from "../../../utils/history";
 
 const initialRequest = {
   nombre: "",
@@ -85,7 +87,6 @@ const CharlasCrudPage = () => {
   };
 
   useEffect(() => {
-    //(async () => {})();
     getAllCharlas();
   }, [request]);
 
@@ -222,6 +223,11 @@ const CharlasCrudPage = () => {
 
   return (
     <>
+      <PageHeader
+        onBack={() => history.goBack()}
+        title="Charlas"
+        subTitle="admin"
+      />
       <Row align="middle" justify="center" style={{ marginBottom: "10px" }}>
         <Col xxl={12} xl={18} lg={18} md={18} sm={18} xs={24}>
           <Search

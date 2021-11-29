@@ -9,6 +9,7 @@ import {
   Tooltip,
   Modal,
   notification,
+  PageHeader,
 } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import Search from "antd/lib/input/Search";
@@ -22,6 +23,7 @@ import {
   EditIcon,
 } from "../../../components/svg/IconSvg";
 import { AdminAPI } from "../../../services/api";
+import history from "../../../utils/history";
 import NewOrEditEventoForm from "./NewOrEditEventoForm";
 
 const initialRequest = {
@@ -209,6 +211,11 @@ const EventosCrudPage = () => {
 
   return (
     <>
+      <PageHeader
+        onBack={() => history.goBack()}
+        title="Eventos"
+        subTitle="admin"
+      />
       <Row align="middle" justify="center" style={{ marginBottom: "10px" }}>
         <Col xxl={12} xl={18} lg={18} md={18} sm={18} xs={24}>
           <Search

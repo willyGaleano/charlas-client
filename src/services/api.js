@@ -92,6 +92,9 @@ const MisEventosAPI = {
     ),
   cancelarEvento: async (asistenciaId) =>
     request.delete(`/Asistencia/RechazarEventoAsync/${asistenciaId}`),
+
+  listMisEstadisticas: (userId) =>
+    request.get(`/Asistencia/GetAllCantEstadoAsync/?userAppId=${userId}`),
 };
 
 const AdminAPI = {

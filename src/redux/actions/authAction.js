@@ -1,5 +1,4 @@
 import { message } from "antd";
-import axios from "axios";
 import { AuthAPI } from "../../services/api";
 import { token } from "../../utils/auth/auth.service";
 import history from "../../utils/history";

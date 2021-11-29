@@ -139,22 +139,24 @@ const HomePage = () => {
                 <List.Item
                   key={item.eventoId}
                   actions={
-                    item.nombreEstadoEvento !== "Finalizado"
-                      ? [
-                          <Popconfirm
-                            placement="topLeft"
-                            title="¿Anotarse a la charla?"
-                            icon={<HeartPopop />}
-                            onConfirm={() =>
-                              generateQrCode(item.eventoId, item.nombreCharla)
-                            }
-                            okText="Sí"
-                            cancelText="No"
-                          >
-                            <HeartIcon style={{ cursor: "pointer" }} />
-                          </Popconfirm>,
-                        ]
-                      : null
+                    item.nombreEstadoEvento !== "Finalizado" ? (
+                      [
+                        <Popconfirm
+                          placement="topLeft"
+                          title="¿Anotarse a la charla?"
+                          icon={<HeartPopop />}
+                          onConfirm={() =>
+                            generateQrCode(item.eventoId, item.nombreCharla)
+                          }
+                          okText="Sí"
+                          cancelText="No"
+                        >
+                          <HeartIcon style={{ cursor: "pointer" }} />
+                        </Popconfirm>,
+                      ]
+                    ) : (
+                      <></>
+                    )
                   }
                   extra={
                     <Image
