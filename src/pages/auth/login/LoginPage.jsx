@@ -19,8 +19,8 @@ const LoginPage = () => {
       title: "Cuentas",
       content: (
         <div>
-          <p>admin: willy@gmail.com - Holamundo123*</p>
-          <p>public: willy@gmail.com - Holamundo123*</p>
+          <p>admin: willy@mail.com - Holamundo123*</p>
+          <p>public: sofia@mail.com - Holamundo123*</p>
         </div>
       ),
       onOk() {},

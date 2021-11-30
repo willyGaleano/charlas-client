@@ -25,6 +25,10 @@ import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 import NewOrEditCharlaForm from "./NewOrEditCharlaForm";
 import history from "../../../utils/history";
+import {
+  BASE_URL_API_SIGNALR,
+  BASE_URL_API_SIGNALR_LOCAL,
+} from "../../../utils/consts";
 
 const initialRequest = {
   nombre: "",
@@ -54,13 +58,13 @@ const CharlasCrudPage = () => {
 
   useEffect(() => {
     const connection = new HubConnectionBuilder()
-      .withUrl("http://localhost:48948/notify")
+      .withUrl(BASE_URL_API_SIGNALR)
       .configureLogging(LogLevel.Information)
       .build();
 
     connection
       .start()
-      .then((response) => console.log("Se conecto al hub"))
+      .then((response) => console.log("Se conectó al hub"))
       .catch((error) => console.log(error.toString()));
 
     connection.on("BroadcastMessage", async () => {
