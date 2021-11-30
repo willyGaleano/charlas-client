@@ -3,7 +3,7 @@ import axios from "axios";
 import { token } from "../utils/auth/auth.service";
 import * as consts from "../utils/consts";
 
-axios.defaults.baseURL = consts.BASE_URL_API_LOCAL;
+axios.defaults.baseURL = consts.BASE_URL_API_REMOTE;
 axios.defaults.headers = { "Content-Type": "application/json" };
 axios.defaults.withCredentials = true;
 
