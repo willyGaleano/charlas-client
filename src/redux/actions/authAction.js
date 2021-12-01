@@ -10,9 +10,7 @@ export const loginAction = (value) => {
     try {
       dispatch(loadingAppAction(true));
       const resp = await AuthAPI.startLogin(value);
-      console.log("resp: ", resp);
       if (resp?.succeeded) {
-        console.log(resp);
         token.set(resp.data.jwToken);
         dispatch(login(resp.data));
       }
@@ -20,7 +18,6 @@ export const loginAction = (value) => {
     } catch (ex) {
       dispatch(loadingAppAction(false));
       message.error("Email o password incorrectos", 5);
-      console.log(ex.message);
     }
   };
 };
@@ -35,7 +32,6 @@ export const registerAction = (value) => {
     try {
       dispatch(loadingAppAction(true));
       const resp = await AuthAPI.startRegister(value);
-      console.log(resp);
       if (resp.succeeded) {
         message.success(resp.message);
         history.push("/login");
@@ -44,7 +40,6 @@ export const registerAction = (value) => {
     } catch (ex) {
       dispatch(loadingAppAction(false));
       message.error(ex.message);
-      console.log(ex);
     }
   };
 };

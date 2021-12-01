@@ -125,12 +125,15 @@ const EventosCrudPage = () => {
   };
 
   const handleOnSubmit = async (value) => {
-    console.log("Form: ", value);
+    const body = {
+      ...value,
+      fechaIni: value.fechaIni.format("YYYY-MM-DDTHH:mm:ss.SSSS"),
+    };
     try {
       setLoadingButton(true);
       let resp;
-      if (detailId === "") resp = await AdminAPI.createEvento(value);
-      else resp = await AdminAPI.editarEvento(detailId, value);
+      if (detailId === "") resp = await AdminAPI.createEvento(body);
+      else resp = await AdminAPI.editarEvento(detailId, body);
 
       if (resp.succeeded) {
         handleCancel();

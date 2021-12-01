@@ -8,7 +8,6 @@ const RegisterPage = () => {
   const { loadingApp } = useSelector((state) => state.app);
 
   const onSubmit = (values) => {
-    console.log("Received values of form: ", values);
     dispatch(registerAction(values));
   };
 

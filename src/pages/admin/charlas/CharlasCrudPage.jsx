@@ -80,7 +80,6 @@ const CharlasCrudPage = () => {
     try {
       setLoadingTable(true);
       const resp = await AdminAPI.listCharla(request);
-      console.log(resp);
       if (resp.succeeded) setRespPaginated(resp);
       else message.error(resp.message);
       setLoadingTable(false);
@@ -140,7 +139,6 @@ const CharlasCrudPage = () => {
     try {
       setLoadingTable(true);
       const resp = await AdminAPI.deshabilitarCharla(item.charlaId);
-      console.log(resp);
       if (resp.succeeded) message.success(resp.message);
       else message.error(resp.message);
       setLoadingTable(false);

@@ -14,9 +14,7 @@ const MisEstadisticas = () => {
   useEffect(() => {
     (async () => {
       try {
-        console.log(user.id);
         const resp = await MisEventosAPI.listMisEstadisticas(user.id);
-        console.log(resp.data);
         if (resp.succeeded) setDataResponse(resp.data);
         else message.error(resp.message);
       } catch (error) {

@@ -17,7 +17,6 @@ const NewOrEditCharlaForm = ({
     } else {
       const foto = pictures[0];
       const fotoUrl = URL.createObjectURL(foto);
-      console.log("onDrop", fotoUrl);
       setImgUrl(fotoUrl);
       setFileList(pictures);
     }

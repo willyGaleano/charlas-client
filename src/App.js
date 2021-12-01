@@ -15,10 +15,8 @@ function App() {
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log("useEffect");
     if (!isLoggedIn && !!token.get()) {
       dispatch(refreshTokenAction());
-      console.log("useEffect rerfesh");
     }
   }, [dispatch]);
 

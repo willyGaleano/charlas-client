@@ -51,7 +51,6 @@ const HomePage = () => {
       try {
         dispatch(loadingAppAction(true));
         const resp = await AdminAPI.listCharlaEvento(request);
-        console.log(resp);
         setRespPaginated(resp);
         dispatch(loadingAppAction(false));
       } catch (error) {

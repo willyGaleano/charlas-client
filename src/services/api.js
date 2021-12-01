@@ -35,13 +35,11 @@ axios.interceptors.response.use(
         originalConfig._retry = true;
         try {
           const rs = await axios.post("/Account/RefreshToken", {});
-          console.log(rs.data);
           const { jwToken } = rs.data.data;
           token.set(jwToken);
           return axios(originalConfig);
         } catch (_error) {
           token.remove();
-          console.log("remove");
           return Promise.reject(_error);
         }
       }

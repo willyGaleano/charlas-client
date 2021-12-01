@@ -124,7 +124,6 @@ const MisCharlasPage = () => {
       try {
         setLoadingTable(true);
         const resp = await MisEventosAPI.listMisEventos(request);
-        console.log(resp);
         if (resp.succeeded) setRespPaginated(resp);
         else message.error(resp.message);
         setLoadingTable(false);

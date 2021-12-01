@@ -38,7 +38,6 @@ const HeaderLayout = () => {
   };
 
   const handleClick = (e) => {
-    console.log("click ", e);
     setCurrentKey(e.key);
   };
 

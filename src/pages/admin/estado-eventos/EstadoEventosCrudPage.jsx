@@ -117,8 +117,6 @@ const EstadoEventosCrudPage = () => {
   };
 
   const handleOnSubmit = async (value) => {
-    console.log("Form: ", value);
-
     try {
       setLoadingButton(true);
       let resp;
